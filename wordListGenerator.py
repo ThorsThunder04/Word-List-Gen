@@ -4,6 +4,7 @@ Written entirely by Thor.N
 This program will generate a word list to use in password cracking.
 You will input the characters you want in the word list and the minimum and maximum length of each word.
 """
+from itertools import product
 
 tempnumlist = '1234567890'
 
@@ -36,6 +37,31 @@ while True:
     
     break
 
+#makes the length iterable
+ranged_length_limit = list(range(min_length, max_length+1))
+
+
 #will add each word to the file
 with open('wordlist.txt', 'w') as wordlist:
-    pass
+
+    total_bytes = 0
+    generated_words = 0
+
+    #iteratese through each length
+    for length in ranged_length_limit:
+        for word in product(characters, repeat=length):
+            wordlist.write(''.join(word) + "\n")
+            generated_words += 1
+
+            total_bytes += length + 2
+    
+    print(total_bytes)
+
+    if total_bytes >= 1000 and total_bytes < 1000000:
+        print(str(total_bytes)[:-3] + "." + str(total_bytes)[-3:-1] + " KB")
+    elif total_bytes >= 1000000 and total_bytes < 10**9:
+        print(str(total_bytes)[:-6] + '.' + str(total_bytes)[-6:-5] + " MB")
+    elif total_bytes >= 10**9 and total_bytes < 10**12:
+        print(str(total_bytes)[:-9] + "." + str(total_bytes)[-9:-7] + " GB")
+    elif total_bytes >= 10**12 and total_bytes < 10**15:
+        print(str(total_bytes)[-12] + "." + str(total_bytes)[-12:-10] + " TB")
