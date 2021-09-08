@@ -37,14 +37,38 @@ while True:
     
     break
 
+
 #makes the length iterable
 ranged_length_limit = list(range(min_length, max_length+1))
+
+
+#calculates how big the text file will be.
+total_bytes = 0
+for length in ranged_length_limit:
+    total_bytes += len(characters) ** (length) * (length + 2)
+
+if total_bytes >= 1000 and total_bytes < 1000000:
+    print("\nYour wordlist file will be " + str(total_bytes)[:-3] + "." + str(total_bytes)[-3:-1] + " KB")
+elif total_bytes >= 1000000 and total_bytes < 10**9:
+    print("\nYour wordlist file will be " + str(total_bytes)[:-6] + '.' + str(total_bytes)[-6:-5] + " MB")
+elif total_bytes >= 10**9 and total_bytes < 10**12:
+    print("\nYour wordlist file will be " + str(total_bytes)[:-9] + "." + str(total_bytes)[-9:-7] + " GB")
+elif total_bytes >= 10**12 and total_bytes < 10**15:
+    print("\nYour wordlist file will be " + str(total_bytes)[-12] + "." + str(total_bytes)[-12:-10] + " TB")
+
+while True:
+    print("\nWould you like to continue?")
+    answer = input("y for yes, n for no >> ")
+    if answer == "y":
+        break
+    elif answer == "n":
+        exit()
+
 
 
 #will add each word to the file
 with open('wordlist.txt', 'w') as wordlist:
 
-    total_bytes = 0
     generated_words = 0
 
     #iteratese through each length
@@ -52,16 +76,6 @@ with open('wordlist.txt', 'w') as wordlist:
         for word in product(characters, repeat=length):
             wordlist.write(''.join(word) + "\n")
             generated_words += 1
+            print(''.join(word))
 
-            total_bytes += length + 2
-    
-    print(total_bytes)
-
-    if total_bytes >= 1000 and total_bytes < 1000000:
-        print(str(total_bytes)[:-3] + "." + str(total_bytes)[-3:-1] + " KB")
-    elif total_bytes >= 1000000 and total_bytes < 10**9:
-        print(str(total_bytes)[:-6] + '.' + str(total_bytes)[-6:-5] + " MB")
-    elif total_bytes >= 10**9 and total_bytes < 10**12:
-        print(str(total_bytes)[:-9] + "." + str(total_bytes)[-9:-7] + " GB")
-    elif total_bytes >= 10**12 and total_bytes < 10**15:
-        print(str(total_bytes)[-12] + "." + str(total_bytes)[-12:-10] + " TB")
+input("\nPress Enter to exit...")
