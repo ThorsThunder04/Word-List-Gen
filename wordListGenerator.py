@@ -44,17 +44,42 @@ ranged_length_limit = list(range(min_length, max_length+1))
 
 #calculates how big the text file will be.
 total_bytes = 0
+total_lines = 0
 for length in ranged_length_limit:
     total_bytes += len(characters) ** (length) * (length + 2)
 
-if total_bytes >= 1000 and total_bytes < 1000000:
-    print("\nYour wordlist file will be " + str(total_bytes)[:-3] + "." + str(total_bytes)[-3:-1] + " KB")
-elif total_bytes >= 1000000 and total_bytes < 10**9:
-    print("\nYour wordlist file will be " + str(total_bytes)[:-6] + '.' + str(total_bytes)[-6:-5] + " MB")
-elif total_bytes >= 10**9 and total_bytes < 10**12:
-    print("\nYour wordlist file will be " + str(total_bytes)[:-9] + "." + str(total_bytes)[-9:-7] + " GB")
-elif total_bytes >= 10**12 and total_bytes < 10**15:
-    print("\nYour wordlist file will be " + str(total_bytes)[-12] + "." + str(total_bytes)[-12:-10] + " TB")
+    total_lines += len(characters) ** length
+
+#displays the size of the file.
+iter_bytes = str(total_bytes)[::-1]
+if total_bytes >= 1000 and total_bytes < 1000000: #displays up to KB
+    print("\nYour wordlist file will be :")
+    print(iter_bytes[:3], "Bytes")
+    print(iter_bytes[3:], "KB")
+
+elif total_bytes >= 1000000 and total_bytes < 10**9: #displays up to MB
+    print("\nYour wordlist file will be :")
+    print(iter_bytes[:3], "Bytes")
+    print(iter_bytes[3:6], "KB")
+    print(iter_bytes[6:], "MB")
+
+elif total_bytes >= 10**9 and total_bytes < 10**12: #displays up to GB
+    print("\nYour wordlist file will be :")
+    print(iter_bytes[:3], "Bytes")
+    print(iter_bytes[3:6], "KB")
+    print(iter_bytes[6:9], "MB")
+    print(iter_bytes[9:], "GB")
+
+elif total_bytes >= 10**12 and total_bytes < 10**15: #displays up to TB
+    print("\nYour wordlist file will be :")
+    print(iter_bytes[:3], "Bytes")
+    print(iter_bytes[3:6], "KB")
+    print(iter_bytes[6:9], "MB")
+    print(iter_bytes[9:12], "GB")
+    print(iter_bytes[12:], 'TB')
+
+
+print("\n", total_lines, "lines will be generated.")
 
 while True:
     print("\nWould you like to continue?")
