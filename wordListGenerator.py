@@ -11,8 +11,8 @@ tempnumlist = '1234567890'
 pause = lambda: input('\nPress Enter to continue...')
 
 print("""
-This program will generate a word list file "wordlist.txt".
-IF you already have a wordlist.txt in the working directory, it will be overridden.
+This program will generate a word list file that you will name before the words are generated.
+If you already have a wordlist with the same name in the working directory, it will be overridden.
 """)
 
 #gets list of characters that will be interated through later on
@@ -41,8 +41,11 @@ while True:
 #makes the length iterable
 ranged_length_limit = list(range(min_length, max_length+1))
 
+#gets custom file name. (wordlist.txt by default)
+print("\nInput what you wan't to call the file (include extention)")
+customeFileName = input("(Default: wordlist.txt) >> ") or "wordlist.txt"
 
-#calculates how big the text file will be.
+#calculates how big the text file will be. Also how many words will be generated.
 total_bytes = 0
 total_lines = 0
 for length in ranged_length_limit:
@@ -52,11 +55,15 @@ for length in ranged_length_limit:
 
 #displays the size of the file.
 iter_bytes = str(total_bytes)[::-1]
-if total_bytes >= 1000 and total_bytes < 1000000: #displays up to KB
+if total_bytes > 0 and total_bytes < 1000: #displays up to Bytes
+    print("\nYour wordlist file will be :")
+    print(iter_bytes, "Bytes")
+
+elif total_bytes >= 1000 and total_bytes < 1000000: #displays up to KB
     print("\nYour wordlist file will be :")
     print(iter_bytes[:3], "Bytes")
     print(iter_bytes[3:], "KB")
-
+    
 elif total_bytes >= 1000000 and total_bytes < 10**9: #displays up to MB
     print("\nYour wordlist file will be :")
     print(iter_bytes[:3], "Bytes")
@@ -76,8 +83,16 @@ elif total_bytes >= 10**12 and total_bytes < 10**15: #displays up to TB
     print(iter_bytes[3:6], "KB")
     print(iter_bytes[6:9], "MB")
     print(iter_bytes[9:12], "GB")
-    print(iter_bytes[12:], 'TB')
+    print(iter_bytes[12:], "TB")
 
+elif total_bytes >= 10**15 and total_bytes < 10**18: # displays up to PB
+    print("\nYour wordlist file will be :")
+    print(iter_bytes[:3], "Bytes")
+    print(iter_bytes[3:6], "KB")
+    print(iter_bytes[6:9], "MB")
+    print(iter_bytes[9:12], "GB")
+    print(iter_bytes[12:15], "TB")
+    print(iter_bytes[15:], "PB")
 
 print("\n", total_lines, "lines will be generated.")
 
@@ -92,7 +107,7 @@ while True:
 
 
 #will add each word to the file
-with open('wordlist.txt', 'w') as wordlist:
+with open(customeFileName, 'w') as wordlist:
 
     generated_words = 0
 
