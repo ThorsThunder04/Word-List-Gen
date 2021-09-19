@@ -41,9 +41,32 @@ while True:
 #makes the length iterable
 ranged_length_limit = list(range(min_length, max_length+1))
 
-#gets custom file name. (wordlist.txt by default)
-print("\nInput what you wan't to call the file (include extention)")
-customeFileName = input("(Default: wordlist.txt) >> ") or "wordlist.txt"
+while True:
+    #gets custom file name. (wordlist.txt by default)
+    print("\nInput what you wan't to call the file (include extention)")
+    customeFileName = input("(Default: wordlist.txt) >> ")
+    if len(customeFileName) == 0:
+        customeFileName = "wordlist.txt"
+    
+    #Makes sure the characters can be used in the file name.
+    if "/" in customeFileName or "\\" in customeFileName or ":" in customeFileName or "*" in customeFileName or "?" in customeFileName or "'" in customeFileName or "<" in customeFileName or ">" in customeFileName or "|" in customeFileName:
+        print("\nThat file name is not valid, it can't contain the following:")
+        print("\, /, |, ?, \", <, >, *, :")
+        input("\nPress Enter to try again...")
+        continue
+    break
+"""            
+    for letter in customeFileName:
+        for sign in ["/", "\\", "|", "<", ">", "*", ":"]:
+            if letter == sign:
+                print("\nThat file name is no valid, it can't contain the following:")
+                print("\, /, |, ?, \", <, >, *, :")
+                input("\nPress Enter to try again...")
+                break
+        
+    break
+"""
+
 
 #calculates how big the text file will be. Also how many words will be generated.
 total_bytes = 0
