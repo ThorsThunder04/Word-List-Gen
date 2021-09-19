@@ -119,13 +119,19 @@ elif total_bytes >= 10**15 and total_bytes < 10**18: # displays up to PB
 
 print("\n", total_lines, "lines will be generated.")
 
+#asks user if they are sure if they want to generate the file.
 while True:
     print("\nWould you like to continue?")
     answer = input("y for yes, n for no >> ")
-    if answer == "y":
-        break
-    elif answer == "n":
-        exit()
+    if answer in ["y", "n"]:
+        if answer == "y":
+            break
+        elif answer == "n":
+            exit()
+    else:
+        print("\nThat is not a valid answer.")
+        print("Please enter either n or y .")
+        input("\nPress Enter to try again...")
 
 
 
