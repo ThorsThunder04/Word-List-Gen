@@ -5,10 +5,10 @@ This program will generate a word list to use in password cracking.
 You will input the characters you want in the word list and the minimum and maximum length of each word.
 """
 from itertools import product
+#TODO: code the function to calculate all combinations myself. Avoid using recursion if possible
 
 tempnumlist = '1234567890'
 
-pause = lambda: input('\nPress Enter to continue...')
 
 print("""
 This program will generate a word list file that you will name before the words are generated.
@@ -31,106 +31,73 @@ while True:
         min_length = int(min_length)
         max_length = int(max_length)
     except ValueError:
-        print('Sorry you must enter a valid number.')
+        print('Sorry you must enter a whole positive number')
         input('Press Enter to try again...')
         continue
     
     break
 
 
-#makes the length iterable
-ranged_length_limit = list(range(min_length, max_length+1))
 
 while True:
-    #gets custom file name. (wordlist.txt by default)
+    # gets custom file name (wordlist.txt by default)
     print("\nInput what you wan't to call the file (include extention)")
-    customeFileName = input("(Default: wordlist.txt) >> ")
-    if len(customeFileName) == 0:
-        customeFileName = "wordlist.txt"
+    customeFileName = input("(Default: wordlist.txt) >> ").strip() or "wordlist.txt"
     
-    #Makes sure the characters can be used in the file name.
-    if "/" in customeFileName or "\\" in customeFileName or ":" in customeFileName or "*" in customeFileName or "?" in customeFileName or "'" in customeFileName or "<" in customeFileName or ">" in customeFileName or "|" in customeFileName:
-        print("\nThat file name is not valid, it can't contain the following:")
+    # make sure all characters for the file name are valid file name characters
+    if any([c in customeFileName for c in ("/", "\\", "|", "?", "\"", "'", "<", ">", "*", ":")]):
+        print("\nInvalid filename, a file name can't contain any of these characters:")
         print("\, /, |, ?, \", <, >, *, :")
         input("\nPress Enter to try again...")
         continue
     break
-"""            
-    for letter in customeFileName:
-        for sign in ["/", "\\", "|", "<", ">", "*", ":"]:
-            if letter == sign:
-                print("\nThat file name is no valid, it can't contain the following:")
-                print("\, /, |, ?, \", <, >, *, :")
-                input("\nPress Enter to try again...")
-                break
-        
-    break
-"""
 
 
-#calculates how big the text file will be. Also how many words will be generated.
-total_bytes = 0
-total_lines = 0
-for length in ranged_length_limit:
-    total_bytes += len(characters) ** (length) * (length + 2)
 
-    total_lines += len(characters) ** length
+total_bytes = 0 # how many bytes will be in the file
+total_lines = 0 # how many lines will be in the file
 
-#displays the size of the file.
-iter_bytes = str(total_bytes)[::-1]
-if total_bytes > 0 and total_bytes < 1000: #displays up to Bytes
+for length in range(min_length, max_length+1):
+    totalCombsForLen = len(characters) ** length 
+
+    total_bytes += totalCombsForLen * (length + 2) # +1 because we count newlines too (\n)
+    total_lines += totalCombsForLen
+
+# displays the size of the file.
+bytes_str = str(total_bytes)
+nByteUnits = lambda num, k: (num//(2**(10*k)))%(2**10)
+
+if total_bytes > 0: #displays Bytes
     print("\nYour wordlist file will be :")
-    print(iter_bytes, "Bytes")
+    print(nByteUnits(total_bytes, 0), "Bytes")
 
-elif total_bytes >= 1000 and total_bytes < 1000000: #displays up to KB
-    print("\nYour wordlist file will be :")
-    print(iter_bytes[:3], "Bytes")
-    print(iter_bytes[3:], "KB")
+if total_bytes >= 2**(10*1): #displays KB
+    print(nByteUnits(total_bytes, 1), "KB")
     
-elif total_bytes >= 1000000 and total_bytes < 10**9: #displays up to MB
-    print("\nYour wordlist file will be :")
-    print(iter_bytes[:3], "Bytes")
-    print(iter_bytes[3:6], "KB")
-    print(iter_bytes[6:], "MB")
+if total_bytes >= 2**(10*2) : #displays MB
+    print(nByteUnits(total_bytes, 2), "MB")
 
-elif total_bytes >= 10**9 and total_bytes < 10**12: #displays up to GB
-    print("\nYour wordlist file will be :")
-    print(iter_bytes[:3], "Bytes")
-    print(iter_bytes[3:6], "KB")
-    print(iter_bytes[6:9], "MB")
-    print(iter_bytes[9:], "GB")
+if total_bytes >= 2**(10*3): #displays GB
+    print(nByteUnits(total_bytes, 3), "GB")
 
-elif total_bytes >= 10**12 and total_bytes < 10**15: #displays up to TB
-    print("\nYour wordlist file will be :")
-    print(iter_bytes[:3], "Bytes")
-    print(iter_bytes[3:6], "KB")
-    print(iter_bytes[6:9], "MB")
-    print(iter_bytes[9:12], "GB")
-    print(iter_bytes[12:], "TB")
+if total_bytes >= 2**(10*4): #displays TB
+    print(nByteUnits(total_bytes, 4), "TB")
 
-elif total_bytes >= 10**15 and total_bytes < 10**18: # displays up to PB
-    print("\nYour wordlist file will be :")
-    print(iter_bytes[:3], "Bytes")
-    print(iter_bytes[3:6], "KB")
-    print(iter_bytes[6:9], "MB")
-    print(iter_bytes[9:12], "GB")
-    print(iter_bytes[12:15], "TB")
-    print(iter_bytes[15:], "PB")
+if total_bytes >= 2**(10*5): # displays PB
+    print(nByteUnits(total_bytes, 5), "PB")
 
-print("\n", total_lines, "lines will be generated.")
+print("\n" + str(total_lines) + " lines will be generated.")
 
-#asks user if they are sure if they want to generate the file.
+# asks user if they are sure that they want to generate the file
 while True:
-    print("\nWould you like to continue?")
-    answer = input("y for yes, n for no >> ")
+    answer = input("\nWould you like to continue? [Y/n]>> ").strip().lower() or "y"
     if answer in ["y", "n"]:
         if answer == "y":
             break
         elif answer == "n":
-            exit()
+            exit(0)
     else:
-        print("\nThat is not a valid answer.")
-        print("Please enter either n or y .")
+        print("\nInvalid Answer: type either y or n to choose")
         input("\nPress Enter to try again...")
 
 
@@ -138,13 +105,12 @@ while True:
 #will add each word to the file
 with open(customeFileName, 'w') as wordlist:
 
-    generated_words = 0
-
-    #iteratese through each length
-    for length in ranged_length_limit:
-        for word in product(characters, repeat=length):
-            wordlist.write(''.join(word) + "\n")
-            generated_words += 1
-            print(''.join(word))
+    #iterates through each length
+    for length in range(min_length, max_length + 1):
+        prod = list(product(characters, repeat=length))
+        for i in range(len(prod)):
+            word = "".join(prod[i])
+            wordlist.write(word + ("\n" if i < len(prod)-1 else ""))
+            print(word)
 
 input("\nPress Enter to exit...")
